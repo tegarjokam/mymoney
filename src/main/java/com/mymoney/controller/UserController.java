@@ -39,7 +39,9 @@ public class UserController {
 			HttpServletResponse response) throws IOException {
 		UserModel userModel = new UserModel();
 		if (result.hasErrors()) {
+			System.out.println("1");
 			response.sendError(HttpStatus.BAD_REQUEST.value(), result.getAllErrors().toString());
+			System.out.println("2");
 			return userModel;
 		} else {
 			return userService.register(userReqModel);

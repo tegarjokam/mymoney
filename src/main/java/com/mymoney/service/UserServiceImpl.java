@@ -10,6 +10,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import com.mymoney.entity.User;
 import com.mymoney.entity.User.Role;
+import com.mymoney.exception.ServiceException;
 import com.mymoney.model.UserModel;
 import com.mymoney.model.UserReqModel;
 import com.mymoney.repository.UserRepository;
@@ -26,11 +27,11 @@ public class UserServiceImpl implements UserService {
 		if(userReqModel.getRole().equalsIgnoreCase("MERCHANT")) {
 			User userByEmail = userRepository.findByEmail(userReqModel.getEmail());
 			if (userByEmail != null && userByEmail.getEmail() != null) 
-				throw new HttpServerErrorException(HttpStatus.CONFLICT, "Email already exists.");
+				throw new ServiceException(409, "Email already exists.");
 
 			User userByPhone = userRepository.findByPhoneNumber(userReqModel.getPhoneNumber());
 			if (userByPhone != null && userByPhone.getPhoneNumber() != null)
-				throw new HttpServerErrorException(HttpStatus.CONFLICT, "Phone Number already exists.");
+				throw new ServiceException(409, "Phone Number already exists.");
 			
 			User newUser = new User();
 			newUser.setEmail(userReqModel.getEmail());
@@ -48,11 +49,11 @@ public class UserServiceImpl implements UserService {
 			System.out.println("2");
 			User userByEmail = userRepository.findByEmail(userReqModel.getEmail());
 			if (userByEmail != null && userByEmail.getEmail() != null) 
-				throw new HttpServerErrorException(HttpStatus.CONFLICT, "Email already exists.");
+				throw new ServiceException(409, "Email already exists.");
 
 			User userByPhone = userRepository.findByPhoneNumber(userReqModel.getPhoneNumber());
 			if (userByPhone != null && userByPhone.getPhoneNumber() != null)
-				throw new HttpServerErrorException(HttpStatus.CONFLICT, "Phone Number already exists.");
+				throw new ServiceException(409, "Phone Number already exists.");
 			
 			User newUser = new User();
 			newUser.setEmail(userReqModel.getEmail());
@@ -70,11 +71,11 @@ public class UserServiceImpl implements UserService {
 			System.out.println("3");
 			User userByEmail = userRepository.findByEmail(userReqModel.getEmail());
 			if (userByEmail != null && userByEmail.getEmail() != null) 
-				throw new HttpServerErrorException(HttpStatus.CONFLICT, "Email already exists.");
+				throw new ServiceException(409, "Email already exists.");
 
 			User userByPhone = userRepository.findByPhoneNumber(userReqModel.getPhoneNumber());
 			if (userByPhone != null && userByPhone.getPhoneNumber() != null)
-				throw new HttpServerErrorException(HttpStatus.CONFLICT, "Phone Number already exists.");
+				throw new ServiceException(409, "Phone Number already exists.");
 			
 			User newUser = new User();
 			newUser.setEmail(userReqModel.getEmail());
@@ -89,7 +90,7 @@ public class UserServiceImpl implements UserService {
 			
 			return userModel;
 		} else {
-			throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Your input doesn't recognize");
+			throw new ServiceException(400, "Your input doesn't recognize");
 		}
 	}
 
