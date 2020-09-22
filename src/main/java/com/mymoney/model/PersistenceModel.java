@@ -14,7 +14,7 @@ import lombok.Data;
 public class PersistenceModel {
 	
 	@NotNull
-	private Integer id;
+	private String id;
 	
 	private String createdBy;
 	private String updatedBy;

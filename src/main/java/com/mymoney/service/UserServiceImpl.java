@@ -2,11 +2,9 @@ package com.mymoney.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpServerErrorException;
 
 import com.mymoney.entity.User;
 import com.mymoney.entity.User.Role;
@@ -40,7 +38,7 @@ public class UserServiceImpl implements UserService {
 			newUser.setPhoneNumber(userReqModel.getPhoneNumber());
 			newUser.setRole(Role.ROLE_MERCHANT);
 			newUser = userRepository.save(newUser);
-			
+
 			UserModel userModel = new UserModel();
 			BeanUtils.copyProperties(newUser, userModel);
 			
