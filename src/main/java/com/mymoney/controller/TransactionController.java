@@ -13,36 +13,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mymoney.model.UserModel;
-import com.mymoney.model.UserReqModel;
-import com.mymoney.service.UserService;
+import com.mymoney.model.TopupReqModel;
+import com.mymoney.model.TransactionModel;
+import com.mymoney.service.TransactionService;
 
 @RestController
-@RequestMapping("/api/rest/v1/user/")
-public class UserController {
+@RequestMapping("/api/rest/v1/transaction/")
+public class TransactionController {
 	
 	@Autowired
-	private UserService userService;
+	private TransactionService transactionService;
 	
 	/**
-	 * Create user account (admin, merchant, and customer)
+	 * TopUp Transaction with user id
 	 * 
-	 * @param userReqModel
+	 * @param topUpReqModel
 	 * @param result
 	 * @param response
 	 * @return
 	 * @throws IOException
 	 */
-	@PostMapping("register")
-	public UserModel create(@RequestBody @Valid UserReqModel userReqModel,
+	@PostMapping("topup")
+	public TransactionModel topup(@RequestBody @Valid TopupReqModel topUpReqModel,
 			BindingResult result,
 			HttpServletResponse response) throws IOException {
-		UserModel userModel = new UserModel();
 		if (result.hasErrors()) {
 			response.sendError(HttpStatus.BAD_REQUEST.value(), result.getAllErrors().toString());
-			return userModel;
+			return null;
 		} else {
-			return userService.register(userReqModel);
+			return transactionService.topup(topUpReqModel);
 		}
 	}
+
 }
