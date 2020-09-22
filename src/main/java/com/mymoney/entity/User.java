@@ -25,7 +25,7 @@ public class User extends Persistence {
 	private static final long serialVersionUID = 623186140292910224L;
 
 	public enum Role {
-		ADMIN, MERCHANT, CUSTOMER
+		ROLE_ADMIN, ROLE_MERCHANT, ROLE_CUSTOMER
 	}
 	
 	@Size(min = 5, max = 50)

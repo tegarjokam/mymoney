@@ -21,7 +21,7 @@ import lombok.Data;
 public class UserReqModel {
 	
 	@NotBlank
-	@Email
+	@Email(message = "email invalid")
 	private String email;
 	
 	@NotBlank
