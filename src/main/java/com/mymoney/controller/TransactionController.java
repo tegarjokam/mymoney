@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mymoney.model.PaymentReqModel;
 import com.mymoney.model.TopupReqModel;
 import com.mymoney.model.TransactionModel;
 import com.mymoney.service.TransactionService;
@@ -42,6 +43,27 @@ public class TransactionController {
 			return null;
 		} else {
 			return transactionService.topup(topUpReqModel);
+		}
+	}
+	
+	/**
+	 * Payment from customer to merchant
+	 * 
+	 * @param paymentReqModel
+	 * @param result
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@PostMapping("payment")
+	public TransactionModel payment(@RequestBody @Valid PaymentReqModel paymentReqModel,
+			BindingResult result,
+			HttpServletResponse response) throws IOException {
+		if (result.hasErrors()) {
+			response.sendError(HttpStatus.BAD_REQUEST.value(), result.getAllErrors().toString());
+			return null;
+		} else {
+			return transactionService.payment(paymentReqModel);
 		}
 	}
 

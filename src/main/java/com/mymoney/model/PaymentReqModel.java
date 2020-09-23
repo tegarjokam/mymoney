@@ -9,16 +9,22 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TopupReqModel {
+public class PaymentReqModel {
+
+	@NotNull
+	private Long creditWallet;
+	
+	@NotNull
+	private Long debitWallet;
 	
 	@NotBlank
 	private String referenceId;
 	
-	@NotNull
-	private Long creditWallet;
-	
 	@NotBlank
 	private String userId;
+	
+	@NotBlank
+	private String merchantId;
 	
 	@NotBlank
 	private String typeTransaction;
