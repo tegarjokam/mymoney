@@ -6,6 +6,8 @@ import java.util.Date;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mymoney.entity.Payment;
 import com.mymoney.entity.TopUp;
@@ -42,6 +44,7 @@ public class TransactionServiceImpl implements TransactionService{
 	private PaymentRepository paymentRepository;
 	
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public TransactionModel topup(TopupReqModel topUpReqModel) {
 		//1. find userId, jika tidak ada send error
 		User userById = userRepository.findById(topUpReqModel.getUserId());
@@ -74,7 +77,7 @@ public class TransactionServiceImpl implements TransactionService{
 		transaction.setDate(new Date());
 		transaction.setDescription(topUpReqModel.getDescription());
 		transaction.setType(Type.TOPUP);
-		transaction.setTopupId(topUp);
+		transaction.setTopup(topUp);
 		transaction = transactionRepository.save(transaction);
 		
 		TransactionModel transactionModel = new TransactionModel();
@@ -84,9 +87,10 @@ public class TransactionServiceImpl implements TransactionService{
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public TransactionModel payment(PaymentReqModel paymentReqModel) {
 		//1. cek userId apakah ada ?
-		User userById = userRepository.findById(paymentReqModel.getUserId());
+		User userById = userRepository.findById(paymentReqModel.getCustomerId());
 		if (userById == null) 
 			throw new ServiceException(404, "user id not found.");
 		//2. cek merchantId apakah ada ?
@@ -105,18 +109,18 @@ public class TransactionServiceImpl implements TransactionService{
 		if (walletMerchantId == null)
 			throw new ServiceException(404, "Merchant wallet not found.");
 		//5. cek jumlah wallet userId apakah mencukupi dengan jumlah payment yg diminta
-		if (walletUserId.getBalance().compareTo(BigInteger.valueOf(paymentReqModel.getDebitWallet())) == -1)
+		if (walletUserId.getBalance().compareTo(BigInteger.valueOf(paymentReqModel.getAmount())) == -1)
 			throw new ServiceException(400, "Your balance is not enough");
 		//6. kurangi jumlah balance userId wallet dan tambahkan jumlah tersebut ke merchant wallet
-		walletUserId.setBalance(walletUserId.getBalance().subtract(BigInteger.valueOf(paymentReqModel.getDebitWallet())));
+		walletUserId.setBalance(walletUserId.getBalance().subtract(BigInteger.valueOf(paymentReqModel.getAmount())));
 		walletUserId = walletRepository.save(walletUserId);
-		walletMerchantId.setBalance(walletMerchantId.getBalance().add(BigInteger.valueOf(paymentReqModel.getCreditWallet())));
+		walletMerchantId.setBalance(walletMerchantId.getBalance().add(BigInteger.valueOf(paymentReqModel.getAmount())));
 		walletMerchantId = walletRepository.save(walletMerchantId);
 		
 		//7. catat dan simpan kedalam transaksi
 		Payment payment = new Payment();
-		payment.setCreditWallet(BigInteger.valueOf(paymentReqModel.getCreditWallet()));
-		payment.setDebitWallet(BigInteger.valueOf(paymentReqModel.getDebitWallet()));
+		payment.setCreditWallet(BigInteger.valueOf(paymentReqModel.getAmount()));
+		payment.setDebitWallet(BigInteger.valueOf(paymentReqModel.getAmount()));
 		payment = paymentRepository.save(payment);
 		
 		Transaction transaction = new Transaction();
@@ -125,7 +129,7 @@ public class TransactionServiceImpl implements TransactionService{
 		transaction.setDate(new Date());
 		transaction.setDescription(paymentReqModel.getDescription());
 		transaction.setType(Type.PAYMENT);
-		transaction.setPaymentId(payment);
+		transaction.setPayment(payment);
 		transaction = transactionRepository.save(transaction);
 		
 		//8. bikin TransactionModelnya dan kirim respons ke client

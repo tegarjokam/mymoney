@@ -52,9 +52,9 @@ public class Transaction extends Persistence {
 	
 	@JoinColumn(name = "topup_id")
 	@OneToOne(targetEntity = TopUp.class)
-	private TopUp topupId;
+	private TopUp topup;
 	
 	@JoinColumn(name = "payment_id")
 	@OneToOne(targetEntity = Payment.class)
-	private Payment paymentId;
+	private Payment payment;
 }

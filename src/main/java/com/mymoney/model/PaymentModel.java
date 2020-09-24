@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PaymentModel {
+public class PaymentModel extends PersistenceModel{
 
 	private BigInteger creditWallet;
 	

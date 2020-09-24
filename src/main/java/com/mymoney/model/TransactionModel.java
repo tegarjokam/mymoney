@@ -26,12 +26,12 @@ public class TransactionModel extends PersistenceModel {
 	
 	private Type type;
 
-	private TopUp topupId;
+	private TopUp topup;
 	
-	private Payment paymentId;
+	private Payment payment;
 	
-	private TopUpModel topup;
-	
-	private PaymentModel payment;
+//	private TopUpModel topup;
+//	
+//	private PaymentModel payment;
 
 }

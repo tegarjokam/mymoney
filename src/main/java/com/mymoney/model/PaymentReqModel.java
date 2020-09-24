@@ -12,16 +12,13 @@ import lombok.Data;
 public class PaymentReqModel {
 
 	@NotNull
-	private Long creditWallet;
-	
-	@NotNull
-	private Long debitWallet;
+	private Long amount;
 	
 	@NotBlank
 	private String referenceId;
 	
 	@NotBlank
-	private String userId;
+	private String customerId;
 	
 	@NotBlank
 	private String merchantId;
